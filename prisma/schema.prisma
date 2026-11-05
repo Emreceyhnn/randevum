@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Business {
+  id                String  @id @default(cuid())
+  name              String
+  slug              String  @unique
+  phone             String
+  address           String  @default("")
+  slotIntervalMin   Int     @default(30)
+  minLeadMinutes    Int     @default(120)
+  maxAdvanceDays    Int     @default(30)
+  smsEnabled        Boolean @default(false)
+  adminPasswordHash String  @default("")
+}
+
+model Service {
+  id           String        @id @default(cuid())
+  name         String
+  durationMin  Int
+  priceTry     Int
+  isActive     Boolean       @default(true)
+  sortOrder    Int           @default(0)
+  appointments Appointment[]
+}
+
+model WorkingHour {
+  id       String  @id @default(cuid())
+  weekday  Int     @unique
+  openMin  Int
+  closeMin Int
+  isClosed Boolean @default(false)
+}
+
+model Appointment {
+  id            String    @id @default(cuid())
+  serviceId     String
+  service       Service   @relation(fields: [serviceId], references: [id])
+  startAt       DateTime
+  endAt         DateTime
+  customerName  String
+  customerPhone String
+  note          String    @default("")
+  status        String    @default("PENDING")
+  smsSentAt     DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([startAt])
+}
