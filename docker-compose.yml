@@ -1,0 +1,20 @@
+services:
+  randevum:
+    build: .
+    image: emrecyhn/randevum:latest
+    container_name: randevum
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: file:/data/randevum.db
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
+      CRON_SECRET: ${CRON_SECRET:?CRON_SECRET is required}
+      SMS_PROVIDER: ${SMS_PROVIDER:-stub}
+      SEED_DEMO: ${SEED_DEMO:-true}
+    volumes:
+      - randevum-data:/data
+    ports:
+      # Loopback only: put nginx / a tunnel in front, never expose the app directly.
+      - "127.0.0.1:${APP_PORT:-3002}:3000"
+
+volumes:
+  randevum-data:
