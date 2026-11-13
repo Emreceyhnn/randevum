@@ -7,6 +7,7 @@ Turkish-first UI · single-tenant · SQLite · one command to run.
 
 **English** · [Türkçe](README.tr.md)
 
+[![Live demo](https://img.shields.io/badge/live_demo-try_it-2ea44f?style=flat-square)](https://randevum.169.58.204.193.sslip.io/demo)
 [![Docker](https://img.shields.io/badge/docker-compose_up-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=next.js&logoColor=white)](https://nextjs.org)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
