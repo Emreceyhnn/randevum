@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { db } from "@/lib/db";
 import { siteUrl } from "@/lib/site";
 
+// SITE_URL çalışma zamanında verilir; build sırasında statik üretilirse localhost'a sabitlenir.
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

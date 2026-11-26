@@ -31,7 +31,7 @@ const AI_BOTS = [
 // SITE_URL çalışma zamanında okunur (Docker); build anında dondurulmamalı.
 export const dynamic = "force-dynamic";
 
-const PRIVATE =["/admin", "/api/"];
+const PRIVATE = ["/admin", "/api/"];
 
 export default function robots(): MetadataRoute.Robots {
   const base = siteUrl();
