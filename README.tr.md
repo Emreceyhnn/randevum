@@ -30,6 +30,10 @@ npm run dev
 | `CRON_SECRET` | `/api/cron/reminders` için Bearer token |
 | `SMS_PROVIDER` | `stub` (konsola yazar) veya `netgsm` |
 | `NETGSM_USERNAME`, `NETGSM_PASSWORD`, `NETGSM_HEADER` | Netgsm bilgileri |
+| `SITE_URL` | Sitenin herkese açık adresi (sonunda `/` olmadan). Canonical bağlantılar, `sitemap.xml` ve sosyal kartlar için |
+| `SITE_MODE` | `landing` (varsayılan): `/` tanıtım sayfası, `/canli-demo` etkileşimli demo. `business`: `/` doğrudan rezervasyon sayfasına yönlenir (müşterinin kendi kurulumu için) |
+
+Sayfalar: `/` tanıtım, `/canli-demo` hesapsız etkileşimli demo (veri kaydedilmez), `/{slug}` rezervasyon sayfası, `/admin` yönetim, `/api/health` sağlık kontrolü.
 
 ## Hatırlatma SMS'i
 
