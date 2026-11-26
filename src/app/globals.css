@@ -1,19 +1,176 @@
 @import "tailwindcss";
 
+/* ───────── Design tokens (aydınlık) ───────── */
 :root {
-  --background: #fafafa;
-  --foreground: #171717;
+  --bg: #f5f7f9;
+  --surface: #ffffff;
+  --raised: #fbfcfd;
+  --sunken: #eef2f5;
+  --line: #e3e8ee;
+  --line-strong: #cdd5df;
+  --text: #0e1a26;
+  --muted: #566476;
+  --faint: #8794a6;
+
+  --brand: #0f766e;
+  --brand-strong: #0b5f58;
+  --brand-soft: #e4f3f0;
+  --brand-ink: #0a4a45;
+  --brand-fg: #ffffff;
+
+  --pending-bg: #fef3c7;   --pending-fg: #8a4b08;   --pending-dot: #d97706;
+  --confirmed-bg: #dcf5e4; --confirmed-fg: #14642f; --confirmed-dot: #16a34a;
+  --cancelled-bg: #fde4e4; --cancelled-fg: #962222; --cancelled-dot: #dc2626;
+  --done-bg: #e4e9f0;      --done-fg: #3a475a;      --done-dot: #64748b;
+
+  --danger: #b42318;
+  --ring: color-mix(in srgb, var(--brand) 45%, transparent);
+
+  --shadow-xs: 0 1px 0 rgb(14 26 38 / 0.04);
+  --shadow-sm: 0 1px 2px rgb(14 26 38 / 0.06), 0 1px 1px rgb(14 26 38 / 0.04);
+  --shadow-md: 0 8px 24px -6px rgb(14 26 38 / 0.14), 0 2px 6px rgb(14 26 38 / 0.06);
+  color-scheme: light;
+}
+
+/* ───────── Karanlık ───────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0a1014;
+    --surface: #111a20;
+    --raised: #16212a;
+    --sunken: #0d151a;
+    --line: #223039;
+    --line-strong: #31434f;
+    --text: #e8eef3;
+    --muted: #93a3b1;
+    --faint: #66788a;
+
+    --brand: #2bc4b0;
+    --brand-strong: #52d6c4;
+    --brand-soft: #0f2c2a;
+    --brand-ink: #8fe6da;
+    --brand-fg: #03201c;
+
+    --pending-bg: #3a290a;   --pending-fg: #fcd34d;   --pending-dot: #f59e0b;
+    --confirmed-bg: #0f2e1b; --confirmed-fg: #86efac; --confirmed-dot: #22c55e;
+    --cancelled-bg: #3b1515; --cancelled-fg: #fca5a5; --cancelled-dot: #ef4444;
+    --done-bg: #1c2733;      --done-fg: #c5d0dc;      --done-dot: #7b8da1;
+
+    --danger: #f87171;
+    --shadow-xs: none;
+    --shadow-sm: 0 0 0 1px rgb(255 255 255 / 0.02);
+    --shadow-md: 0 12px 32px -8px rgb(0 0 0 / 0.6);
+    color-scheme: dark;
+  }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-sunken: var(--sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-fg: var(--brand-fg);
+  --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
 }
 
+html { background: var(--bg); }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ───────── Bileşenler ───────── */
+@layer components {
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-sm); }
+  .card-flat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    min-height: 40px; padding: 0 0.95rem; border-radius: 10px;
+    font-size: 14px; font-weight: 550; line-height: 1; white-space: nowrap; cursor: pointer;
+    border: 1px solid transparent; transition: background 140ms ease, border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+  }
+  .btn:active { transform: translateY(0.5px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: var(--brand); color: var(--brand-fg); box-shadow: var(--shadow-xs); }
+  .btn-primary:hover:not(:disabled) { background: var(--brand-strong); }
+  .btn-secondary { background: var(--surface); color: var(--text); border-color: var(--line-strong); }
+  .btn-secondary:hover:not(:disabled) { background: var(--sunken); }
+  .btn-ghost { background: transparent; color: var(--muted); }
+  .btn-ghost:hover:not(:disabled) { background: var(--sunken); color: var(--text); }
+  .btn-danger { background: transparent; color: var(--danger); border-color: color-mix(in srgb, var(--danger) 35%, transparent); }
+  .btn-danger:hover:not(:disabled) { background: color-mix(in srgb, var(--danger) 10%, transparent); }
+  .btn-lg { min-height: 52px; font-size: 16px; border-radius: 14px; width: 100%; }
+  .btn-sm { min-height: 34px; padding: 0 0.7rem; font-size: 13px; border-radius: 9px; }
+
+  .field {
+    width: 100%; min-height: 44px; padding: 0.6rem 0.8rem; border-radius: 10px;
+    background: var(--surface); color: var(--text); border: 1px solid var(--line-strong);
+    font-size: 15px; transition: border-color 140ms ease, box-shadow 140ms ease;
+  }
+  .field::placeholder { color: var(--faint); }
+  .field:hover { border-color: var(--faint); }
+  .field:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px var(--ring); }
+  .field-sm { min-height: 38px; padding: 0.4rem 0.65rem; font-size: 14px; }
+  .label { display: block; font-size: 12.5px; font-weight: 550; color: var(--muted); margin-bottom: 0.35rem; }
+  .hint { font-size: 12.5px; color: var(--faint); margin-top: 0.3rem; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.22rem 0.6rem 0.22rem 0.5rem;
+    border-radius: 999px; font-size: 12px; font-weight: 600; line-height: 1.2; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: currentColor; opacity: 0.9; }
+  .badge-PENDING { background: var(--pending-bg); color: var(--pending-fg); }
+  .badge-CONFIRMED { background: var(--confirmed-bg); color: var(--confirmed-fg); }
+  .badge-CANCELLED { background: var(--cancelled-bg); color: var(--cancelled-fg); }
+  .badge-DONE { background: var(--done-bg); color: var(--done-fg); }
+
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  .eyebrow { font-size: 11.5px; font-weight: 650; letter-spacing: 0.07em; text-transform: uppercase; color: var(--faint); }
+
+  /* Anahtar (switch) */
+  .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex: none; }
+  .switch input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 1; }
+  .switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--line-strong); transition: background 140ms ease; }
+  .switch span::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 999px;
+    background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 0.3); transition: transform 140ms ease;
+  }
+  .switch input:checked + span { background: var(--brand); }
+  .switch input:checked + span::after { transform: translateX(18px); }
+  .switch input:focus-visible + span { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+  .skeleton { background: linear-gradient(90deg, var(--sunken), var(--line), var(--sunken)); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; border-radius: 10px; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .rise { animation: rise 220ms ease-out both; }
 }
