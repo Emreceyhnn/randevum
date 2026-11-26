@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,8 +13,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Randevum",
-  description: "Online randevu",
+  title: { default: "Randevum", template: "%s — Randevum" },
+  description: "Online randevu: hesap gerekmez, SMS ile hatırlatma.",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f7f9" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a1014" },
+  ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
