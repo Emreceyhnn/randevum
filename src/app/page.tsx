@@ -4,6 +4,8 @@ import { notFound, redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { Logo } from "@/components/brand";
 import { Icon, type IconName } from "@/components/icons";
+import { FAQ, FEATURES } from "@/lib/content";
+import { REPO_URL, SITE_DESCRIPTION, SITE_NAME, siteUrl } from "@/lib/site";
 import { DashboardMock, PhoneMock, SmsMock } from "@/components/marketing/mockups";
 
 export const dynamic = "force-dynamic";
@@ -27,46 +29,6 @@ export const metadata: Metadata = {
 
 const SECTORS = ["Kuaför & berber", "Güzellik salonu", "Diş kliniği", "Psikolog & terapist", "Veteriner", "Oto servis", "Fizyoterapi"];
 
-const FEATURES: { icon: IconName; title: string; text: string; wide?: boolean }[] = [
-  {
-    icon: "calendar",
-    title: "Hesapsız, 3 adımlı rezervasyon",
-    text: "Müşteriniz hizmeti, günü ve saati seçer; adını ve telefonunu girer. Uygulama indirmek ya da üye olmak yok. Tek bir bağlantıyı Instagram'a, WhatsApp'a ya da Google profilinize koymanız yeterli.",
-    wide: true,
-  },
-  {
-    icon: "shield",
-    title: "Çift rezervasyon olmaz",
-    text: "Çalışma saatleri, hizmet süresi, minimum hazırlık süresi ve dolu randevular birlikte hesaplanır. Müşteri yalnızca gerçekten müsait saatleri görür.",
-  },
-  {
-    icon: "bell",
-    title: "SMS ile hatırlatma",
-    text: "Ertesi günün onaylı randevularına otomatik SMS gider. Netgsm entegrasyonu hazır. SMS hatası randevu oluşturmayı hiçbir zaman engellemez.",
-  },
-  {
-    icon: "gauge",
-    title: "Günü tek bakışta gösteren panel",
-    text: "Bugünkü randevu sayısı, onay bekleyenler, tahmini ciro ve doluluk oranı ilk ekranda. Tek tıkla onaylayın, iptal edin ya da tamamlayın; arayın ya da WhatsApp'tan yazın.",
-    wide: true,
-  },
-  {
-    icon: "sparkle",
-    title: "Her cihazda aynı kalite",
-    text: "Telefon, tablet ve masaüstünde akıcı çalışır. Sistem temasına göre aydınlık ya da karanlık görünür, hareketi azaltma tercihine saygı duyar.",
-  },
-  {
-    icon: "settings",
-    title: "Kurallar sizde",
-    text: "Slot aralığı, en erken ve en geç randevu süresi, haftalık çalışma saatleri ve kapalı günler. Hepsi panelden, kod yazmadan.",
-  },
-  {
-    icon: "globe",
-    title: "Türkiye'ye göre tasarlandı",
-    text: "0532…, 532… ve +90… biçimlerini tanıyan telefon doğrulama, Türk lirası fiyatlar, Europe/Istanbul saat dilimi ve baştan sona Türkçe arayüz.",
-  },
-];
-
 const STEPS = [
   { n: "01", icon: "server" as IconName, title: "Kurun", text: "Tek komutla ayağa kalkar. Veritabanı geçişleri kendiliğinden uygulanır, örnek işletme ilk açılışta yüklenir.", code: "docker compose up -d --build" },
   { n: "02", icon: "scissors" as IconName, title: "Tanımlayın", text: "Hizmetlerinizi, sürelerini, fiyatlarını ve çalışma saatlerinizi panelden girin. Ortalama birkaç dakika sürer." },
@@ -80,33 +42,6 @@ const COMPARE: { row: string; us: string; them: string }[] = [
   { row: "SMS sağlayıcısı", us: "Netgsm hazır, arayüz genişletilebilir", them: "Çoğunlukla sabit" },
   { row: "Kaynak kod ve lisans", us: "Açık kaynak, MIT", them: "Kapalı" },
   { row: "Özelleştirme", us: "Kodu istediğiniz gibi değiştirin", them: "Sunulan ayarlarla sınırlı" },
-];
-
-const FAQ: { q: string; a: string }[] = [
-  {
-    q: "Kurulum zor mu?",
-    a: "Docker kullanabiliyorsanız tek komuttur: depoyu indirin, .env dosyasında yönetici şifresini belirleyin ve docker compose up çalıştırın. README adım adım anlatır. Teknik biri yoksa kurulumu bir geliştiriciye yaptırmak birkaç saatlik iştir.",
-  },
-  {
-    q: "Hangi büyüklükteki işletmeler için uygun?",
-    a: "Tek kişilik bir salondan, birkaç koltuklu bir kliniğe kadar. Şu anki sürüm tek bir randevu takvimi üzerinde çalışır; personel bazlı ayrı takvimler henüz yoktur. Bunu bilerek söylüyoruz ki beklentiniz doğru olsun.",
-  },
-  {
-    q: "SMS için ayrıca ödeme yapacak mıyım?",
-    a: "Randevum SMS için ücret almaz. SMS'i gönderen sağlayıcınızın (ör. Netgsm) tarifesi geçerlidir. Denemek için “stub” modunu kullanabilirsiniz; mesajlar gerçekten gönderilmez, sunucu günlüğüne yazılır.",
-  },
-  {
-    q: "Müşteri verileri nerede duruyor?",
-    a: "Kendi sunucunuzdaki tek bir SQLite dosyasında. Üçüncü bir tarafın veritabanı yok, abonelik bitince verinize erişimin kesilmesi gibi bir durum da yok. Yönetici oturumu imzalı ve httpOnly çerezle korunur.",
-  },
-  {
-    q: "Müşterilerim üye olmak zorunda mı?",
-    a: "Hayır. Ad soyad ve cep telefonu yeterlidir. Telefon numarası yalnızca randevu bildirimi için kullanılır.",
-  },
-  {
-    q: "Lisansı nedir, ticari kullanabilir miyim?",
-    a: "MIT lisansıyla açık kaynaktır. Kendi işletmenizde ya da müşterileriniz için ticari olarak kullanabilir, değiştirebilirsiniz.",
-  },
 ];
 
 function Check({ children }: { children: React.ReactNode }) {
@@ -133,21 +68,59 @@ export default async function Landing() {
   }
   const bookingHref = slug ? `/${slug}` : "/canli-demo";
 
+  const base = siteUrl();
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "Randevum",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web",
-    inLanguage: "tr",
-    description: "Küçük işletmeler için kendi sunucunuzda çalışan randevu ve SMS hatırlatma sistemi.",
-    offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
-    license: "https://opensource.org/licenses/MIT",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${base}/#organization`,
+        name: SITE_NAME,
+        url: base,
+        logo: `${base}/icon.svg`,
+        sameAs: [REPO_URL],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${base}/#website`,
+        url: base,
+        name: SITE_NAME,
+        inLanguage: "tr-TR",
+        description: SITE_DESCRIPTION,
+        publisher: { "@id": `${base}/#organization` },
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${base}/#software`,
+        name: SITE_NAME,
+        url: base,
+        applicationCategory: "BusinessApplication",
+        applicationSubCategory: "Randevu yönetimi",
+        operatingSystem: "Web, Docker",
+        inLanguage: "tr-TR",
+        description: SITE_DESCRIPTION,
+        featureList: FEATURES.map((f) => f.title),
+        offers: { "@type": "Offer", price: "0", priceCurrency: "TRY" },
+        license: "https://opensource.org/licenses/MIT",
+        codeRepository: REPO_URL,
+        publisher: { "@id": `${base}/#organization` },
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${base}/#faq`,
+        inLanguage: "tr-TR",
+        mainEntity: FAQ.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
   };
 
   return (
     <div className="overflow-x-clip">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
 
       {/* ───── Üst menü ───── */}
       <header className="sticky top-0 z-40 border-b border-line/70 bg-bg/80 backdrop-blur-lg">

@@ -82,6 +82,7 @@ npm run dev
 
 | Route | What |
 | --- | --- |
+| `/robots.txt`, `/sitemap.xml`, `/llms.txt`, `/llms-full.txt`, `/manifest.webmanifest` | SEO and AI-crawler files (search engines and AI bots such as GPTBot, ClaudeBot, PerplexityBot are explicitly allowed; `/admin` and `/api` are not). Set `SITE_URL` to your real domain — on `localhost` everything is `noindex`. |
 | `/` | Product landing page (or a redirect to the booking page when `SITE_MODE=business`) |
 | `/canli-demo` | Interactive, no-account demo: book as a customer, approve in the admin view, see the SMS. Nothing is stored |
 | `/{slug}` | Public booking page of the business |
