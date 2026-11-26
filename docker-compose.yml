@@ -14,6 +14,9 @@ services:
       SITE_URL: ${SITE_URL:-}
       # "landing" = marketing home page at "/", "business" = "/" redirects to the booking page
       SITE_MODE: ${SITE_MODE:-landing}
+      GOOGLE_SITE_VERIFICATION: ${GOOGLE_SITE_VERIFICATION:-}
+      BING_SITE_VERIFICATION: ${BING_SITE_VERIFICATION:-}
+      YANDEX_SITE_VERIFICATION: ${YANDEX_SITE_VERIFICATION:-}
     volumes:
       - randevum-data:/data
     ports:

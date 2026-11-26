@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { addDays, dayKey, fmtMinutes, minutesOfDay, weekdayOf } from "@/lib/time";
 import { Icon } from "@/components/icons";
+import { siteUrl } from "@/lib/site";
 import { BookingFlow } from "./booking-flow";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +11,17 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: PageProps<"/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const b = await db.business.findUnique({ where: { slug } });
-  return b ? { title: `${b.name} · Online randevu` } : {};
+  if (!b) return { title: "Sayfa bulunamadı", robots: { index: false, follow: false } };
+  const title = `${b.name} · Online randevu`;
+  const description = `${b.name} için hesap açmadan online randevu alın${b.address ? ` — ${b.address}` : ""}. Hizmet, gün ve saati seçin; randevunuz anında oluşsun, SMS ile hatırlatılın.`;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/${b.slug}` },
+    robots: { index: true, follow: true },
+    openGraph: { type: "website", locale: "tr_TR", title, description, url: `/${b.slug}`, siteName: b.name, images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: b.name }] },
+    twitter: { card: "summary_large_image", title, description, images: ["/twitter-image"] },
+  };
 }
 
 function initials(name: string): string {
@@ -50,9 +61,41 @@ export default async function BusinessPage({ params }: PageProps<"/[slug]">) {
         ? `Bugün ${fmtMinutes(todayHours.openMin)}'de açılıyor`
         : "Bugün için çalışma saati bitti";
   const telHref = `tel:+90${business.phone.replace(/\D/g, "").replace(/^0/, "")}`;
+  const pageUrl = `${siteUrl()}/${business.slug}`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${pageUrl}#business`,
+    name: business.name,
+    url: pageUrl,
+    telephone: `+90${business.phone.replace(/\D/g, "").replace(/^0/, "")}`,
+    ...(business.address ? { address: { "@type": "PostalAddress", streetAddress: business.address, addressCountry: "TR" } } : {}),
+    priceRange: services.length ? `₺${Math.min(...services.map((s) => s.priceTry))}–₺${Math.max(...services.map((s) => s.priceTry))}` : undefined,
+    currenciesAccepted: "TRY",
+    openingHoursSpecification: hours
+      .filter((h) => !h.isClosed)
+      .map((h) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][h.weekday],
+        opens: fmtMinutes(h.openMin),
+        closes: fmtMinutes(h.closeMin),
+      })),
+    potentialAction: { "@type": "ReserveAction", target: pageUrl, name: "Online randevu al" },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Hizmetler",
+      itemListElement: services.map((s) => ({
+        "@type": "Offer",
+        price: s.priceTry,
+        priceCurrency: "TRY",
+        itemOffered: { "@type": "Service", name: s.name },
+      })),
+    },
+  };
 
   return (
     <div className="min-h-dvh">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <header className="relative overflow-hidden border-b border-line bg-surface">
         <div
           aria-hidden="true"
