@@ -10,6 +10,10 @@ services:
       CRON_SECRET: ${CRON_SECRET:?CRON_SECRET is required}
       SMS_PROVIDER: ${SMS_PROVIDER:-stub}
       SEED_DEMO: ${SEED_DEMO:-true}
+      # Public origin, used for canonical links / sitemap, e.g. https://randevu.example.com
+      SITE_URL: ${SITE_URL:-}
+      # "landing" = marketing home page at "/", "business" = "/" redirects to the booking page
+      SITE_MODE: ${SITE_MODE:-landing}
     volumes:
       - randevum-data:/data
     ports:

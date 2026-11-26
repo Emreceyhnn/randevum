@@ -75,6 +75,18 @@ npm run dev
 | `SMS_PROVIDER` | `stub` | `stub` (logs to console) or `netgsm`. |
 | `NETGSM_USERNAME` / `NETGSM_PASSWORD` / `NETGSM_HEADER` | — | Netgsm credentials, only for `SMS_PROVIDER=netgsm`. |
 | `SEED_DEMO` | `true` | Seed the demo business on first boot (Docker only). Set `false` for a clean install. |
+| `SITE_URL` | `http://localhost:3000` | Public origin (no trailing slash). Used for canonical links, `sitemap.xml` and social cards. |
+| `SITE_MODE` | `landing` | `landing`: `/` is the product page and `/canli-demo` an interactive demo. `business`: `/` redirects to your booking page — use this for a client's own install. |
+
+### Pages
+
+| Route | What |
+| --- | --- |
+| `/` | Product landing page (or a redirect to the booking page when `SITE_MODE=business`) |
+| `/canli-demo` | Interactive, no-account demo: book as a customer, approve in the admin view, see the SMS. Nothing is stored |
+| `/{slug}` | Public booking page of the business |
+| `/admin` | Admin panel (password) |
+| `/api/health` | Liveness + database check, used by the Docker `HEALTHCHECK` |
 
 ## SMS reminders
 

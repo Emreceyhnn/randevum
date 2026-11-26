@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.SITE_URL || "http://localhost:3000"),
   title: { default: "Randevum", template: "%s — Randevum" },
   description: "Online randevu: hesap gerekmez, SMS ile hatırlatma.",
+  applicationName: "Randevum",
+  openGraph: { siteName: "Randevum", locale: "tr_TR", type: "website" },
 };
 
 export const viewport: Viewport = {

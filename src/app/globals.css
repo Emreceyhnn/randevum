@@ -87,7 +87,8 @@
   --shadow-md: var(--shadow-md);
 }
 
-html { background: var(--bg); }
+html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: 84px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   background: var(--bg);
   color: var(--text);
@@ -151,6 +152,21 @@ body {
   .badge-CANCELLED { background: var(--cancelled-bg); color: var(--cancelled-fg); }
   .badge-DONE { background: var(--done-bg); color: var(--done-fg); }
 
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--line) 70%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--line) 70%, transparent) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+  .gradient-text {
+    background: linear-gradient(120deg, var(--brand) 0%, color-mix(in srgb, var(--brand) 55%, #3b82f6) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .section-title { font-size: clamp(1.75rem, 1.2rem + 2vw, 2.6rem); line-height: 1.12; letter-spacing: -0.02em; font-weight: 650; }
   .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 
